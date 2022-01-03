@@ -1,0 +1,244 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled15.ipynb",
+      "provenance": [],
+      "collapsed_sections": [],
+      "authorship_tag": "ABX9TyPL7FDpTYA2ht9zeVPtYHzA",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Ayona123/Drug_repurposing/blob/main/trial\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "id": "QlJG1lPfBnJX",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "87a0192c-f4b1-44d4-c0cb-684e8153c011"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "\u001b[?25l\r\u001b[K     |█████▊                          | 10 kB 22.7 MB/s eta 0:00:01\r\u001b[K     |███████████▍                    | 20 kB 14.6 MB/s eta 0:00:01\r\u001b[K     |█████████████████               | 30 kB 10.1 MB/s eta 0:00:01\r\u001b[K     |██████████████████████▊         | 40 kB 9.3 MB/s eta 0:00:01\r\u001b[K     |████████████████████████████▍   | 51 kB 5.2 MB/s eta 0:00:01\r\u001b[K     |████████████████████████████████| 57 kB 2.6 MB/s \n",
+            "\u001b[?25h\u001b[?25l\r\u001b[K     |█████▊                          | 10 kB 21.0 MB/s eta 0:00:01\r\u001b[K     |███████████▌                    | 20 kB 20.8 MB/s eta 0:00:01\r\u001b[K     |█████████████████▎              | 30 kB 25.4 MB/s eta 0:00:01\r\u001b[K     |███████████████████████         | 40 kB 29.2 MB/s eta 0:00:01\r\u001b[K     |████████████████████████████▉   | 51 kB 33.4 MB/s eta 0:00:01\r\u001b[K     |████████████████████████████████| 56 kB 3.7 MB/s \n",
+            "\u001b[?25h"
+          ]
+        }
+      ],
+      "source": [
+        "!pip install kora -q\n",
+        "import kora.install.rdkit"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from rdkit import Chem"
+      ],
+      "metadata": {
+        "id": "cYsi3vRUBrvM"
+      },
+      "execution_count": 2,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip install git+https://github.com/samoturk/mol2vec"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "AXt9TyOaBwfd",
+        "outputId": "fcd97e32-9611-4c6d-fdd4-2c118103c0f5"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Collecting git+https://github.com/samoturk/mol2vec\n",
+            "  Cloning https://github.com/samoturk/mol2vec to /tmp/pip-req-build-7c5t_4i0\n",
+            "  Running command git clone -q https://github.com/samoturk/mol2vec /tmp/pip-req-build-7c5t_4i0\n",
+            "Requirement already satisfied: numpy in /usr/local/lib/python3.7/dist-packages (from mol2vec==0.1) (1.19.5)\n",
+            "Requirement already satisfied: gensim in /usr/local/lib/python3.7/dist-packages (from mol2vec==0.1) (3.6.0)\n",
+            "Requirement already satisfied: tqdm in /usr/local/lib/python3.7/dist-packages (from mol2vec==0.1) (4.62.3)\n",
+            "Requirement already satisfied: joblib in /usr/local/lib/python3.7/dist-packages (from mol2vec==0.1) (1.1.0)\n",
+            "Requirement already satisfied: pandas in /usr/local/lib/python3.7/dist-packages (from mol2vec==0.1) (1.1.5)\n",
+            "Requirement already satisfied: matplotlib in /usr/local/lib/python3.7/dist-packages (from mol2vec==0.1) (3.2.2)\n",
+            "Requirement already satisfied: IPython in /usr/local/lib/python3.7/dist-packages (from mol2vec==0.1) (5.5.0)\n",
+            "Requirement already satisfied: seaborn in /usr/local/lib/python3.7/dist-packages (from mol2vec==0.1) (0.11.2)\n",
+            "Requirement already satisfied: scipy>=0.18.1 in /usr/local/lib/python3.7/dist-packages (from gensim->mol2vec==0.1) (1.4.1)\n",
+            "Requirement already satisfied: smart-open>=1.2.1 in /usr/local/lib/python3.7/dist-packages (from gensim->mol2vec==0.1) (5.2.1)\n",
+            "Requirement already satisfied: six>=1.5.0 in /usr/local/lib/python3.7/dist-packages (from gensim->mol2vec==0.1) (1.15.0)\n",
+            "Requirement already satisfied: setuptools>=18.5 in /usr/local/lib/python3.7/dist-packages (from IPython->mol2vec==0.1) (57.4.0)\n",
+            "Requirement already satisfied: pickleshare in /usr/local/lib/python3.7/dist-packages (from IPython->mol2vec==0.1) (0.7.5)\n",
+            "Requirement already satisfied: prompt-toolkit<2.0.0,>=1.0.4 in /usr/local/lib/python3.7/dist-packages (from IPython->mol2vec==0.1) (1.0.18)\n",
+            "Requirement already satisfied: decorator in /usr/local/lib/python3.7/dist-packages (from IPython->mol2vec==0.1) (4.4.2)\n",
+            "Requirement already satisfied: traitlets>=4.2 in /usr/local/lib/python3.7/dist-packages (from IPython->mol2vec==0.1) (5.1.1)\n",
+            "Requirement already satisfied: pexpect in /usr/local/lib/python3.7/dist-packages (from IPython->mol2vec==0.1) (4.8.0)\n",
+            "Requirement already satisfied: pygments in /usr/local/lib/python3.7/dist-packages (from IPython->mol2vec==0.1) (2.6.1)\n",
+            "Requirement already satisfied: simplegeneric>0.8 in /usr/local/lib/python3.7/dist-packages (from IPython->mol2vec==0.1) (0.8.1)\n",
+            "Requirement already satisfied: wcwidth in /usr/local/lib/python3.7/dist-packages (from prompt-toolkit<2.0.0,>=1.0.4->IPython->mol2vec==0.1) (0.2.5)\n",
+            "Requirement already satisfied: kiwisolver>=1.0.1 in /usr/local/lib/python3.7/dist-packages (from matplotlib->mol2vec==0.1) (1.3.2)\n",
+            "Requirement already satisfied: python-dateutil>=2.1 in /usr/local/lib/python3.7/dist-packages (from matplotlib->mol2vec==0.1) (2.8.2)\n",
+            "Requirement already satisfied: cycler>=0.10 in /usr/local/lib/python3.7/dist-packages (from matplotlib->mol2vec==0.1) (0.11.0)\n",
+            "Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1 in /usr/local/lib/python3.7/dist-packages (from matplotlib->mol2vec==0.1) (3.0.6)\n",
+            "Requirement already satisfied: pytz>=2017.2 in /usr/local/lib/python3.7/dist-packages (from pandas->mol2vec==0.1) (2018.9)\n",
+            "Requirement already satisfied: ptyprocess>=0.5 in /usr/local/lib/python3.7/dist-packages (from pexpect->IPython->mol2vec==0.1) (0.7.0)\n",
+            "Building wheels for collected packages: mol2vec\n",
+            "  Building wheel for mol2vec (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for mol2vec: filename=mol2vec-0.1-py3-none-any.whl size=14038 sha256=92244fc95067aaa91a6b409343b3ce5f8ab82f621087a2714f63d5160856379b\n",
+            "  Stored in directory: /tmp/pip-ephem-wheel-cache-3x368pxb/wheels/80/d5/e1/90dc211e4a17780f99eaec43328470a70284cd731ef2a77034\n",
+            "Successfully built mol2vec\n",
+            "Installing collected packages: mol2vec\n",
+            "Successfully installed mol2vec-0.1\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from google.colab import drive\n",
+        "drive.mount('/content/drive',force_remount=True)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "yRTJkyi6B061",
+        "outputId": "818c1f85-5059-468b-8453-2e36b3e7a5dd"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Mounted at /content/drive\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "df=pd.read_csv('/content/sample_data/mol100.csv')\n",
+        "\n",
+        "target=df['Vina Score']\n",
+        "df2=df[['smiles']]\n",
+        "df2['mol'] = df2['smiles'].apply(lambda x: Chem.MolFromSmiles(x))\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "mRIwzvcBCLRG",
+        "outputId": "fb2ce740-f0fb-4e45-817d-00a716b2bdc6"
+      },
+      "execution_count": 89,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "/usr/local/lib/python3.7/dist-packages/ipykernel_launcher.py:6: SettingWithCopyWarning: \n",
+            "A value is trying to be set on a copy of a slice from a DataFrame.\n",
+            "Try using .loc[row_indexer,col_indexer] = value instead\n",
+            "\n",
+            "See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy\n",
+            "  \n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from gensim.models import word2vec\n",
+        "from mol2vec import features\n",
+        "from mol2vec import helpers\n",
+        "from mol2vec.features import mol2alt_sentence, mol2sentence, MolSentence, DfVec, sentences2vec\n",
+        "df2['sentence'] = df2.apply(lambda x: MolSentence(mol2alt_sentence(x['mol'], 1)), axis=1)\n"
+      ],
+      "metadata": {
+        "id": "EobwxeKrCqZ8"
+      },
+      "execution_count": 88,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model = word2vec.Word2Vec.load('/content/sample_data/model_300dim.pkl')\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "df2['mol2vec'] = [DfVec(x) for x in sentences2vec(df2['sentence'], model, unseen='UNK')]\n",
+        "\n",
+        "X = np.array([x.vec for x in df2['mol2vec']])\n",
+        "y = target.values\n",
+        "X.shape\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Tip1NiToGwav",
+        "outputId": "b649f87d-2c77-435a-ba26-834b838f056c"
+      },
+      "execution_count": 87,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(100, 100)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 87
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        ""
+      ],
+      "metadata": {
+        "id": "h02-UuegMyUH"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
